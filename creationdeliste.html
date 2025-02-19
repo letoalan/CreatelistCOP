@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignation de Catégories</title>
+    <link rel="stylesheet" href="css/forme.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Assignation de Catégories</h1>
+    <p>Chargez un fichier Excel (.xlsx) contenant une liste d'élèves pour générer les catégories.</p>
+
+    <!-- Zone de téléchargement du fichier -->
+    <div class="upload-section">
+        <input type="file" id="fileInput" accept=".xlsx">
+        <label for="fileInput" class="upload-button">Charger un fichier Excel</label>
+    </div>
+
+    <!-- Tableau pour afficher les résultats -->
+    <div id="resultSection" class="hidden">
+        <h2>Résultats</h2>
+        <table id="resultTable">
+            <thead>
+            <tr>
+                <th>Élève</th>
+                <th>Catégorie</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Les lignes seront ajoutées dynamiquement ici -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Scripts -->
+
+<script src="js/fonction.js"></script>
+</body>
+</html>
