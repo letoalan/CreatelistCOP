@@ -3,40 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignation de Catégories</title>
+    <title>CreatelistCOP - Assignation de Délégations</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <h1>Assignation de Catégories</h1>
-    <p>Chargez un fichier Excel (.xlsx) contenant une liste d'élèves pour générer les catégories.</p>
+    <div class="glass-bg"></div>
+    
+    <div class="container">
+        <header>
+            <h1>CreatelistCOP</h1>
+            <p class="subtitle">Assignation intelligente des délégations pour simulations COP</p>
+        </header>
 
-    <!-- Zone de téléchargement du fichier -->
-    <div class="upload-section">
-        <input type="file" id="fileInput" accept=".xlsx">
-        <label for="fileInput" class="upload-button">Charger un fichier Excel</label>
+        <main>
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <section class="step-card" id="step1">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <h2>Chefs de délégation</h2>
+                        <span id="status1" class="status-icon hidden">✅</span>
+                    </div>
+                    <p>Assignez les chefs (14 États + 5 acteurs non-étatiques) et les co-leaders.</p>
+                    <div class="actions">
+                        <button class="icon-btn" onclick="downloadTemplate(1)" title="Télécharger le template Excel">
+                            <span class="icon">📥</span>
+                        </button>
+                        <label for="fileInput1" class="upload-btn primary">
+                            Charger Excel Étape 1
+                        </label>
+                        <input type="file" id="fileInput1" accept=".xlsx" hidden>
+                    </div>
+                </section>
+
+                <!-- Step 2 -->
+                <section class="step-card" id="step2">
+                    <div class="step-header">
+                        <span class="step-number">2</span>
+                        <h2>Compléter les délégations</h2>
+                        <span id="status2" class="status-icon hidden">✅</span>
+                    </div>
+                    <p>Ajoutez le reste des membres aux délégations existantes.</p>
+                    <div class="actions">
+                        <button class="icon-btn" onclick="downloadTemplate(2)" title="Télécharger le template Excel">
+                            <span class="icon">📥</span>
+                        </button>
+                        <label for="fileInput2" class="upload-btn secondary">
+                            Charger Excel Étape 2
+                        </label>
+                        <input type="file" id="fileInput2" accept=".xlsx" hidden>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Result Section -->
+            <div id="resultSection" class="hidden">
+                <div class="result-header">
+                    <h2>Résultats de l'attribution</h2>
+                    <div class="export-actions">
+                        <button class="btn-outline" onclick="exportExcel()">
+                            <span class="icon">📊</span> Excel
+                        </button>
+                        <button class="btn-outline" onclick="exportPDF()">
+                            <span class="icon">📄</span> PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="view-tabs">
+                    <button class="tab-btn active" onclick="switchView('hierarchy')">Hiérarchie COP</button>
+                    <button class="tab-btn" onclick="switchView('grouped')">Vue Dynamique</button>
+                    <button class="tab-btn" onclick="switchView('flat')">Tableau Plat</button>
+                </div>
+
+                <!-- Hierarchical View -->
+                <div id="hierarchyView" class="view-content active">
+                    <section class="main-category">
+                        <div class="category-header">
+                            <span class="folder-icon">📁</span>
+                            <h2>ÉTATS (14)</h2>
+                        </div>
+                        <div id="etats-container" class="subgroups-container">
+                            <!-- Injected via display-groups.js -->
+                        </div>
+                    </section>
+
+                    <section class="main-category">
+                        <div class="category-header">
+                            <span class="folder-icon">📁</span>
+                            <h2>NON-ÉTATS (5)</h2>
+                        </div>
+                        <div id="non-etats-container" class="subgroups-container">
+                            <!-- Injected via display-groups.js -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Grouped View (Legacy/Dynamic) -->
+                <div id="groupedView" class="view-content">
+                    <!-- Cards injected via JS -->
+                </div>
+
+                <!-- Flat View -->
+                <div id="flatView" class="view-content">
+                    <table id="resultTable">
+                        <thead>
+                            <tr>
+                                <th>Élève</th>
+                                <th>Délégation</th>
+                                <th>Rôle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 CreatelistCOP - Outil Local & Sécurisé</p>
+        </footer>
     </div>
 
-    <!-- Tableau pour afficher les résultats -->
-    <div id="resultSection" class="hidden">
-        <h2>Résultats</h2>
-        <table id="resultTable">
-            <thead>
-            <tr>
-                <th>Élève</th>
-                <th>Catégorie</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Les lignes seront ajoutées dynamiquement ici -->
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Scripts -->
-
-<script src="js/script.js"></script>
+    <script src="js/delegations-data.js"></script>
+    <script src="js/display-groups.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        function switchView(view) {
+            document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            const targetView = document.getElementById(view + 'View');
+            if (targetView) targetView.classList.add('active');
+            
+            // Selectionner le bouton par son attribut onclick
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.getAttribute('onclick').includes(`'${view}'`)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
